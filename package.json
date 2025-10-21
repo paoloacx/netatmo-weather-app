@@ -1,9 +1,9 @@
 {
-  "name": "netatmo-api",
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "axios": "^1.6.0",
-    "querystring": "^0.2.1"
-  }
+  "version": 2,
+  "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" }
+  ]
 }
