@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'querystring';
 
 export default async function handler(req, res) {
-  const redirectUri = 'https://netatmo-api.vercel.app/api/auth/callback';
+  const redirectUri = 'https://netatmo-weather-app.vercel.app/api/auth/callback';
 
   if (req.query.code) {
     const payload = {
