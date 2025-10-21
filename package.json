@@ -2,7 +2,12 @@
   "name": "netatmo-weather-app",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
   "dependencies": {
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "querystring": "^0.2.1"
   }
 }
