@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     }
   }
 
+  // 👇 AQUÍ ESTABA EL PROBLEMA: los & no deben ser &amp;
   const authUrl = `https://auth.netatmo.com/oauth2/authorize?client_id=${process.env.NETATMO_CLIENT_ID}&redirect_uri=${redirectUri}&scope=read_station&state=1234&response_type=code`;
   return res.redirect(authUrl);
 }
