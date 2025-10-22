@@ -2,6 +2,7 @@
 export default async function handler(req, res) {
   const redirectUri = 'https://netatmo-weather-app.vercel.app/api/auth';
 
+  // Si Netatmo nos devuelve un "code", lo intercambiamos por tokens
   if (req.query && req.query.code) {
     const code = req.query.code;
     try {
@@ -32,7 +33,8 @@ export default async function handler(req, res) {
     }
   }
 
-  // ⚠️ Usa & y no &amp;
+  // Si no hay "code", redirige al login de Netatmo
   const authUrl = `https://auth.netatmo.com/oauth2/authorize?client_id=${encodeURIComponent(process.env.NETATMO_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=read_station&state=1234&response_type=code`;
+  
   return res.redirect(authUrl);
 }
