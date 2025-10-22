@@ -1,6 +1,6 @@
 // api/auth.js
 export default async function handler(req, res) {
-  const redirectUri = 'https://netatmo-weather-app.vercel.app';
+  const redirectUri = 'https://netatmo-weather-app.vercel.app/api/auth';
 
   // Si Netatmo nos devuelve un "code", lo intercambiamos por tokens
   if (req.query && req.query.code) {
