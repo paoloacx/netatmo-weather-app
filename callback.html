@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticando...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .loading {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="spinner"></div>
+        <h2>Autenticando con Netatmo...</h2>
+        <p>Serás redirigido en un momento</p>
+    </div>
+
+    <script>
+        // Obtener el código de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+
+        if (error) {
+            document.querySelector('.loading').innerHTML = `
+                <h2>❌ Error de autenticación</h2>
+                <p>No se pudo conectar con Netatmo: ${error}</p>
+                <p><a href="/" style="color: white;">Volver a intentar</a></p>
+            `;
+        } else if (code) {
+            // Enviar el código al backend para obtener el token
+            fetch('/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    // Guardar tokens en localStorage
+                    localStorage.setItem('netatmo_access_token', data.access_token);
+                    localStorage.setItem('netatmo_refresh_token', data.refresh_token);
+                    localStorage.setItem('netatmo_expires_at', Date.now() + (data.expires_in * 1000));
+                    
+                    // Redirigir a la página principal
+                    window.location.href = '/';
+                } else {
+                    throw new Error('No se recibió el token de acceso');
+                }
+            })
+            .catch(error => {
+                document.querySelector('.loading').innerHTML = `
+                    <h2>❌ Error</h2>
+                    <p>${error.message}</p>
+                    <p><a href="/" style="color: white;">Volver a intentar</a></p>
+                `;
+            });
+        } else {
+            document.querySelector('.loading').innerHTML = `
+                <h2>❌ No se recibió código de autenticación</h2>
+                <p><a href="/" style="color: white;">Volver a intentar</a></p>
+            `;
+        }
+    </script>
+</body>
+</html>
