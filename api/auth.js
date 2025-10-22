@@ -35,6 +35,6 @@ export default async function handler(req, res) {
 
   // Si no hay "code", redirige al login de Netatmo
   const authUrl = `https://auth.netatmo.com/oauth2/authorize?client_id=${encodeURIComponent(process.env.NETATMO_CLIENT_ID)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=read_station&state=1234&response_type=code`;
-  
+
   return res.redirect(authUrl);
 }
